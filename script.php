@@ -1,7 +1,9 @@
 <?php
-require 'vendor/autoload.php';
 
-$faker = Faker\Factory::create();
+require 'vendor/autoload.php';
+require_once 'App/csvEditor.php';
+require_once 'App/exceptions.php';
+
 $help = "CSV Editor - это конслоньная программа для преобразования данных из csv-файла, в которых значения 
 определенных полей заменяется по конфигурационному файлу. Программа принимает на вход 3 обязательных параметра.
 Первый - путь до исходного csv-файла с данными, второй - путь до конфигурационного файла, в котором определено,
@@ -16,21 +18,12 @@ $help = "CSV Editor - это конслоньная программа для п
 файле столбцов. При несоответствии выдавать ошибку.
         \n-h|--help - вывести справку\n";
 
-//$virtual_hosts_dir = __DIR__;
-//if (!is_dir($virtual_hosts_dir) || !is_writable($virtual_hosts_dir))
-//{
-//    echo "You must run this script as root!\n";
-//    exit;
-//}
-
-//$input_file = 'HD-94.csv';
+$faker = Faker\Factory::create();
 $delimiter_delim = ',';
 $skip_first = false;
 $strict = false;
 
-/**
- * Считывание параметров
- */
+//Считывание параметров
 
 if ($argc > 1) {
     for ($i = 1; $i < $argc; $i = $i + 2) {
@@ -71,6 +64,7 @@ if ($argc > 1) {
             default:
                 if (substr($argv[$i], 0, 1) == '-') {
                     echo "Неизвестная опция: {$argv[$i]}\n";
+                    exit;
                 }
                 break;
         }
@@ -78,7 +72,7 @@ if ($argc > 1) {
 }
 
 if (!$input_file || !$config_file || !$output_file) {
-    echo "Необходимо ввести три обязательных параметра:
+    echo "Необходимо ввести обязательные параметры:
     \n-i|--input-file - путь до исходного файла
     \n-c|--config-file - путь до файла конфигураци
     \n-o|--output-file - путь до файла с результатом
@@ -88,44 +82,25 @@ if (!$input_file || !$config_file || !$output_file) {
 
 $configs = include($config_file);
 
-if ($strict) {
-    try {
+//Проверка на исключения, запуск функции, выполняющей изменения данных и запись в новый файл
+try {
+    if ($strict) {
         testStrict($input_file, $delimiter_delim, $configs);
-    } catch (Exception $e) {
-        echo 'Error: ', $e->getMessage(), "\n";
     }
+    testException($output_file, $input_file, $delimiter_delim);
+    
+    csvEditor($input_file, $output_file, $delimiter_delim, $configs, $skip_first, $faker);
+} catch (Exception $e) {
+    echo 'Error: ', $e->getMessage(), "\n";
+    exit;
 }
 
-/**
- * Считывание, изменение и запись в новый файл строк
- */
+//var_dump($encoding);
 
-$row = 0;
-if (($handle = fopen($input_file, "r")) !== FALSE) {
-    $handle2 = fopen($output_file, "w+");
-    while (($data = fgetcsv($handle, 1000, $delimiter_delim)) !== FALSE) {
-        foreach ($configs as $key => $value) {
-            if ($skip_first) {
-                $skip_first = false;
-                continue;
-            }
-            $data[$key] = is_callable($value) ? $value($data[$key], $data,
-                $row, $faker) : ($value ? $faker->$value() : $value);
-        }
-        fputcsv($handle2, $data);
-        $row++;
-    }
-    fclose($handle);
-    fclose($handle2);
-}
-
-function testStrict($input, $delimiter, $config)
-{
-    if (($testHandle = fopen($input, "r")) !== FALSE) {
-        $testData = fgetcsv($testHandle, 1000, $delimiter);
-        if (count($testData) < max(array_keys($config))) {
-            throw new Exception('Конфигурационный файл ссылается на несуществующие столбцы в исходном файле!');
-        }
-    }
-    return;
-}
+//function fputcsv_eol($fp, $array, $eol, $delimiter = ',', $enclosure = '"', $escape_char = "\\")
+//{
+//    fputcsv($fp, $array, $delimiter, $enclosure, $escape_char);
+//    if ("\n" != $eol && 0 === fseek($fp, -1, SEEK_CUR)) {
+//        fwrite($fp, $eol);
+//    }
+//}
