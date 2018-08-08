@@ -10,6 +10,6 @@ return [
         if ($rowData[0] == 101) {
             return 0;
         }
-        return $faker->randomDigit;
+        return 'рукп';
     },
 ];

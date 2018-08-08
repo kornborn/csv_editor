@@ -14,6 +14,7 @@ function testStrict($input, $delimiter, $config)
 //Функция для проверки на исключения
 function testException($output, $input, $delimiter)
 {
+    //Проверка на доступ к папке с выходным файлом
     if ($output[0] == DIRECTORY_SEPARATOR) {
         $arr = explode(DIRECTORY_SEPARATOR, $output);
         array_pop($arr);
@@ -21,27 +22,20 @@ function testException($output, $input, $delimiter)
     } else {
         $out_dir = __DIR__;
     }
-
-    $input_arr = explode('.', $input);
-    $input_format = array_pop($input_arr);
-
-    if ($input_format != 'csv' && $input_format != 'dsv') {
-        throw new Exception('Формат исходного файла должен быть CSV или DSV!');
-    }
-
     if (!is_dir($out_dir) || !is_writable($out_dir)) {
         throw new Exception('Нет доступа к папке для сохранения нового файла!');
     }
 
+    //Проверка формата
+    $input_arr = explode('.', $input);
+    $input_format = array_pop($input_arr);
+    if ($input_format != 'csv' && $input_format != 'dsv') {
+        throw new Exception('Формат исходного файла должен быть CSV или DSV!');
+    }
+
+    //Проверка на доступ к файлу
     if (!is_file($input) || !is_readable($input)) {
         throw new Exception('Нет доступа исходному файлу!');
     }
-
-    if (($testHandle = fopen($input, "r")) !== false) {
-        $testData = fgetcsv($testHandle, 1000, $delimiter);
-        if (mb_detect_encoding(implode('', $testData)) != 'UTF-8' &&
-            mb_detect_encoding(implode('', $testData)) != 'cp1251') {
-            throw new Exception('Кодировка исходного файла должна быть UTF-8 или cp1251');
-        }
-    }
 }
+
