@@ -22,6 +22,9 @@ $faker = Faker\Factory::create();
 $delimiter_delim = ',';
 $skip_first = false;
 $strict = false;
+$input_file = '';
+$config_file = '';
+$output_file = '';
 
 //Считывание параметров
 //var_dump($argv);
@@ -94,7 +97,7 @@ try {
     }
     testException($output_file, $input_file, $delimiter_delim);
     
-    csvEditor($input_file, $output_file, $delimiter_delim, $configs, $skip_first, $faker);
+    csvEditor($input_file, $output_file, $configs, $faker, $delimiter_delim, $skip_first);
 } catch (Exception $e) {
     echo 'Error: ', $e->getMessage(), "\n";
     exit(1);

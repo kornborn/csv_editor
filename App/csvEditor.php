@@ -1,7 +1,7 @@
 <?php
 
 //Считывание, изменение и запись в новый файл строк
-function csvEditor($input_file, $output_file, $delimiter_delim, $configs, $skip_first, $faker)
+function csvEditor($input_file, $output_file, $configs, $faker, $delimiter_delim = ',', $skip_first = false)
 {
     $eol = detectEOL($input_file);
     $encoding = checkEncoding($input_file, $delimiter_delim) ? 'UTF-8' : 'Windows-1251';
@@ -9,7 +9,6 @@ function csvEditor($input_file, $output_file, $delimiter_delim, $configs, $skip_
     ini_set('auto_detect_line_endings', true);
     if (($handle = fopen($input_file, "r")) !== false) {
         $handle2 = fopen($output_file, "w+");
-
         while (($data = fgetcsv($handle, 1000, $delimiter_delim)) !== false) {
             foreach ($configs as $key => $value) {
                 if ($skip_first) {
@@ -57,7 +56,6 @@ function detectEOL($input)
 //Функция fputcsv с параметром end of line (окончание строки)
 function fputcsv_eol($fp, $array, $eol, $delimiter = ',', $enclosure = '"', $escape_char = "\\")
 {
-
     fputcsv($fp, $array, $delimiter, $enclosure, $escape_char);
     if ("\n" != $eol && 0 === fseek($fp, -1, SEEK_CUR)) {
         fwrite($fp, $eol);
