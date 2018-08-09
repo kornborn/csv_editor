@@ -32,25 +32,25 @@ if ($argc > 1) {
     for ($i = 1; $i < $argc; $i++) {
         switch ($argv[$i]) {
             case "-i":
-            case "--input-file":
+            case "--input":
                 $i++;
                 $input_file = $argv[$i];
                 break;
 
             case "-c":
-            case "--config-file":
+            case "--config":
                 $i++;
                 $config_file = $argv[$i];
                 break;
 
             case "-o":
-            case "--output-file":
+            case "--output":
                 $i++;
                 $output_file = $argv[$i];
                 break;
 
             case "-d":
-            case "--delimiter-delim":
+            case "--delimiter":
                 $i++;
                 $delimiter_delim = $argv[$i];
                 break;
@@ -66,7 +66,7 @@ if ($argc > 1) {
             case "-h":
             case "--help":
                 echo $help;
-                break;
+                exit(0);
 
             default:
                 echo "Неизвестный параметр: {$argv[$i]}\n";
@@ -78,24 +78,21 @@ if ($argc > 1) {
 
 if (!$input_file || !$config_file || !$output_file) {
     echo "Необходимо ввести обязательные параметры:".
-    PHP_EOL."-i|--input-file - путь до исходного файла".
-    PHP_EOL."-c|--config-file - путь до файла конфигураци".
-    PHP_EOL."-o|--output-file - путь до файла с результатом".
+    PHP_EOL."-i|--input file - путь до исходного файла".
+    PHP_EOL."-c|--config file - путь до файла конфигураци".
+    PHP_EOL."-o|--output file - путь до файла с результатом".
     PHP_EOL."Полный список параметров можно увидеть в справке (-h|--help).".PHP_EOL;
     exit(1);
 }
 
 $configs = include($config_file);
 
-//Кодировка
-
-
 //Проверка на исключения, запуск функции, которая изменяет данные и записывает в новый файл
 try {
     if ($strict) {
         testStrict($input_file, $delimiter_delim, $configs);
     }
-    testException($output_file, $input_file, $delimiter_delim);
+    testException($output_file, $input_file, $configs, $delimiter_delim);
     
     csvEditor($input_file, $output_file, $configs, $faker, $delimiter_delim, $skip_first);
 } catch (Exception $e) {

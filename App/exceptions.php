@@ -12,7 +12,7 @@ function testStrict($input, $delimiter, $config)
 }
 
 //Функция для проверки на исключения
-function testException($output, $input, $delimiter)
+function testException($output, $input, $config, $delimiter)
 {
     //Проверка на доступ к папке с выходным файлом
     if ($output[0] == DIRECTORY_SEPARATOR) {
@@ -26,16 +26,19 @@ function testException($output, $input, $delimiter)
         throw new Exception('Нет доступа к папке для сохранения нового файла!');
     }
 
-    //Проверка формата
-    $input_arr = explode('.', $input);
-    $input_format = array_pop($input_arr);
-    if ($input_format != 'csv' && $input_format != 'dsv') {
-        throw new Exception('Формат исходного файла должен быть CSV или DSV!');
-    }
-
     //Проверка на доступ к файлу
     if (!is_file($input) || !is_readable($input)) {
         throw new Exception('Нет доступа исходному файлу!');
+    }
+
+    //Проверка конфигурационного файла
+    if (!is_array($config)) {
+        throw new Exception('Конфигурационный файл настроен неправильно!');
+    }
+
+    //Проверка разделителя
+    if (strlen($delimiter) != 1) {
+        throw new Exception('Разделитель должен быть одним символом!');
     }
 }
 
