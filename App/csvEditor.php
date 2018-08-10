@@ -12,6 +12,9 @@ function csvEditor($input_file, $output_file, $configs, $faker, $delimiter_delim
         $handle2 = fopen($output_file, "w+");
         while (($data = fgetcsv($handle, 1000, $delimiter_delim)) !== false) {
             if (count($data) != $columns) {
+                if ($data[0] == null && count($data) == 1) {
+                    continue;
+                }
                 throw new Exception('Неверные данные в исходном файле!');
             }
             foreach ($configs as $key => $value) {
