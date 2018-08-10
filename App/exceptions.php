@@ -46,6 +46,6 @@ function testConfig($config)
 {
     //Проверка на доступ к конфигурационному файлу
     if (!is_file($config) || !is_readable($config)) {
-        throw new Exception('Нет доступа исходному файлу!');
+        throw new Exception('Нет доступа к конфигурационному файлу!');
     }
 }

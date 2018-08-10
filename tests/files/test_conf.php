@@ -2,7 +2,7 @@
 
 return [
     1 => 'streetName', // faker
-    2 => null, // set value to null
+    2 => 'слово', // set value to null
     3 => function ($value, $rowData, $rowIndex, $faker) {
         if ($value == 23) {
             return $rowIndex + 5;
@@ -10,6 +10,6 @@ return [
         if ($rowData[0] == 101) {
             return 0;
         }
-        return 'рукп';
+        return $faker->randomDigit;
     },
 ];
