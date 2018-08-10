@@ -40,7 +40,6 @@ class TestFile extends TestCase
 
             // неправильный делиметр
             [false, ["-i $input_utf_8", "-c $test_conf", "-o $output", '-d "asdf"']],
-            [false, ["-i $input_utf_8", "-c $test_conf", "-o $output", '-d']],
 
             // неправильный конфиг
             [false, ["-i $input_utf_8", "-c $test_wrong_conf", "-o $output"]],

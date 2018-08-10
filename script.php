@@ -50,7 +50,9 @@ if ($argc > 1) {
             case "-d":
             case "--delimiter":
                 $i++;
-                $delimiter_delim = $argv[$i];
+                if (isset($argv[$i])) {
+                    $delimiter_delim = $argv[$i];
+                }
                 break;
 
             case "--skip-first":
