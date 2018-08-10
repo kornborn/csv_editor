@@ -51,9 +51,8 @@ function detectEOL($input)
             return "\n\r";
         } elseif (substr($eol, -1) == "\n") {
             return "\n";
-        } elseif (substr($eol, -1) == "\r") {
-            return "\r";
         }
+        return PHP_EOL;
     }
 }
 

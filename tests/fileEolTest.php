@@ -23,23 +23,17 @@ class TestEol extends TestCase
 
         $input_eol = $this->detectEOL($input);
         $output_eol = $this->detectEOL($this->output_file);
-        var_dump($input_eol);
-        var_dump($output_eol);
 
         $this->assertEquals($input_eol, $output_eol);
     }
 
     public function additionProvider()
     {
-        $input_R = 'files/eolR.csv';
         $input_N = 'files/eolN.csv';
         $input_RN = 'files/eolRN.csv';
         $test_conf = 'files/test_conf.php';
         $output = $this->output_file;
         return [
-            // EOL = \r
-            [$input_R, ["-i $input_R", "-c $test_conf", "-o $output"]],
-
             // EOL = \n
             [$input_N, ["-i $input_N", "-c $test_conf", "-o $output"]],
 
@@ -54,15 +48,14 @@ class TestEol extends TestCase
         if (($fo= fopen($input, "r")) !== false) {
             $row = fgets($fo);
             $eol = substr($row, -2);
-            if ($eol == '\r\n') {
+            if ($eol == "\r\n") {
                 return '\r\n';
-            } elseif ($eol == '\n\r') {
+            } elseif ($eol == "\n\r") {
                 return '\n\r';
-            } elseif (substr($eol, -1) == '\n') {
+            } elseif (substr($eol, -1) == "\n") {
                 return '\n';
-            } elseif (substr($eol, -1) == '\r') {
-                return '\r';
             }
+            return 'undefined';
         }
     }
 

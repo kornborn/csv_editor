@@ -27,7 +27,6 @@ $config_file = '';
 $output_file = '';
 
 //Считывание параметров
-//var_dump($argv);
 if ($argc > 1) {
     for ($i = 1; $i < $argc; $i++) {
         switch ($argv[$i]) {
@@ -85,15 +84,20 @@ if (!$input_file || !$config_file || !$output_file) {
     exit(1);
 }
 
-$configs = include($config_file);
+
 
 //Проверка на исключения, запуск функции, которая изменяет данные и записывает в новый файл
 try {
+    testConfig($config_file);
+
+    $configs = include($config_file);
+
     if ($strict) {
         testStrict($input_file, $delimiter_delim, $configs);
     }
+
     testException($output_file, $input_file, $configs, $delimiter_delim);
-    
+
     csvEditor($input_file, $output_file, $configs, $faker, $delimiter_delim, $skip_first);
 } catch (Exception $e) {
     echo 'Error: ', $e->getMessage(), "\n";

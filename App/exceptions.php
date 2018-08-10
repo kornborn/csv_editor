@@ -14,6 +14,11 @@ function testStrict($input, $delimiter, $config)
 //Функция для проверки на исключения
 function testException($output, $input, $config, $delimiter)
 {
+    //Проверка конфигурационного файла
+    if (!is_array($config)) {
+        throw new Exception('Конфигурационный файл настроен неправильно!');
+    }
+
     //Проверка на доступ к папке с выходным файлом
     if ($output[0] == DIRECTORY_SEPARATOR) {
         $arr = explode(DIRECTORY_SEPARATOR, $output);
@@ -26,14 +31,9 @@ function testException($output, $input, $config, $delimiter)
         throw new Exception('Нет доступа к папке для сохранения нового файла!');
     }
 
-    //Проверка на доступ к файлу
+    //Проверка на доступ к исходному файлу
     if (!is_file($input) || !is_readable($input)) {
-        throw new Exception('Нет доступа исходному файлу!');
-    }
-
-    //Проверка конфигурационного файла
-    if (!is_array($config)) {
-        throw new Exception('Конфигурационный файл настроен неправильно!');
+        throw new Exception('Нет доступа к исходному файлу!');
     }
 
     //Проверка разделителя
@@ -42,3 +42,10 @@ function testException($output, $input, $config, $delimiter)
     }
 }
 
+function testConfig($config)
+{
+    //Проверка на доступ к конфигурационному файлу
+    if (!is_file($config) || !is_readable($config)) {
+        throw new Exception('Нет доступа исходному файлу!');
+    }
+}
