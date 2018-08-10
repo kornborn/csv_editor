@@ -36,6 +36,13 @@ function testException($output, $input, $config, $delimiter)
         throw new Exception('Нет доступа к исходному файлу!');
     }
 
+    //Проверка на доступ к выходному файлу
+    if (file_exists($output)) {
+        if (!is_writable($output)) {
+            throw new Exception('Файл с результатом недоступен!');
+        }
+    }
+
     //Проверка разделителя
     if (strlen($delimiter) != 1) {
         throw new Exception('Разделитель должен быть одним символом!');
