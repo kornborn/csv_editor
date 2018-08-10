@@ -42,7 +42,7 @@ function checkEncoding($input, $delimiter)
 //Функция определяет окончание строки в исходном файле
 function detectEOL($input)
 {
-    if (($fo= fopen($input, "r")) !== false) {
+    if (($fo = fopen($input, "r")) !== false) {
         $row = fgets($fo);
         $eol = substr($row, -2);
         if ($eol == "\r\n") {
