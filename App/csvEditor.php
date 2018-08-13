@@ -20,12 +20,14 @@ function csvEditor($input_file, $output_file, $configs, $faker, $delimiter_delim
             foreach ($configs as $key => $value) {
                 if ($skip_first) {
                     $skip_first = false;
+                    fputcsvEol($handle2, $data, $eol, $delimiter_delim);
+                    $row++;
                     continue;
                 }
                 $data[$key] = mb_convert_encoding(is_callable($value) ? $value($data[$key], $data, $row, $faker) :
                     ($value ? $faker->$value() : $value), $encoding);
             }
-            fputcsv_eol($handle2, $data, $eol, $delimiter_delim);
+            fputcsvEol($handle2, $data, $eol, $delimiter_delim);
             $row++;
         }
         fclose($handle);
@@ -60,7 +62,7 @@ function detectEOL($input)
 }
 
 //Функция fputcsv с параметром end of line (окончание строки)
-function fputcsv_eol($fp, $array, $eol, $delimiter = ',', $enclosure = '"', $escape_char = "\\")
+function fputcsvEol($fp, $array, $eol, $delimiter = ',', $enclosure = '"', $escape_char = "\\")
 {
     if (!fputcsv($fp, $array, $delimiter, $enclosure, $escape_char)) {
         throw new Exception('При попытке записи произошла ошибка!');
