@@ -1,4 +1,8 @@
 {
+    "autoload": {
+        "files": ["App/csvEditor.php",
+            "App/exceptions.php"]
+    },
     "require": {
         "fzaninotto/faker": "^1.8",
         "mikey179/vfsStream": "^1.6"

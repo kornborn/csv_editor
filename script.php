@@ -1,8 +1,6 @@
 <?php
 
 require 'vendor/autoload.php';
-require_once 'App/csvEditor.php';
-require_once 'App/exceptions.php';
 
 $help = "CSV Editor - это конслоньная программа для преобразования данных в файле формата csv. Данные изменяются в 
 соответствии с конфигурационным файлом. Программа принимает на вход 3 обязательных параметра.
